@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Customer Subscription API", type: :request do
-  context "GET /subscriptions" do
+  context "POST /subscriptions" do
     scenario "a customer can subscribe to a plan" do
       customer1 = create(:customer)
       tea = create(:tea)
@@ -38,7 +38,7 @@ RSpec.describe "Customer Subscription API", type: :request do
     end
   end
 
-  context "GET /subscriptions sad path" do
+  context "POST /subscriptions sad path" do
     scenario "returns an error if subscription is not created" do
       customer1 = create(:customer)
       tea = create(:tea)
