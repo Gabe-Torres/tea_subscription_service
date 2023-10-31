@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   # root "articles#index"
   namespace :api do
     namespace :v0 do
-      resources :subscriptions, only: [:create]
+      resources :subscriptions, only: [:create, :update]
       post "/subscriptions", to: "subscriptions#create"
+      patch "/subscriptions/:id", to: "subscriptions#update"
     end
   end
 end
