@@ -10,8 +10,12 @@ class Api::V0::SubscriptionsController < ApplicationController
 
   def update
     subscription = Subscription.find(params[:id])
-    subscription.update(subscription_params)
-    render json: SubscriptionsSerializer.new(subscription), status: 200
+    begin
+      subscription.update(subscription_params)
+      render json: SubscriptionsSerializer.new(subscription), status: 200
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: 400
+    end
   end
 
   private
