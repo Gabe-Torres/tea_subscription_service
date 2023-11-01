@@ -1,9 +1,14 @@
 class Api::V0::SubscriptionsController < ApplicationController
   def index
-    customer = Customer.find(params[:id])
-    customer_subscriptions = customer.subscriptions
-    render json: SubscriptionsSerializer.new(customer_subscriptions), status: 200
+    begin
+      customer = Customer.find(params[:id])
+      customer_subscriptions = customer.subscriptions
+      render json: SubscriptionsSerializer.new(customer_subscriptions), status: 200
+    rescue ActiveRecord::RecordNotFound => e
+      render json: { error: e.message }, status: 400
+    end
   end
+
   def create
     begin
       subscription = Subscription.create!(subscription_params)

@@ -15,8 +15,8 @@ RSpec.describe "All Customer Subscriptions API", type: :request do
     @tea2 = create(:tea)
     @active_subscription = create(:subscription, customer_id: @customer1.id, tea_id: @tea2.id, status: true, price: 20.00, frequency: "bi-monthly", title: "Not Special Tea")
   end
-  describe "GET /subscriptions" do
-    it "returns all active and cancelled subscriptions for a customer" do
+  context "GET /subscriptions" do
+    scenario "returns all active and cancelled subscriptions for a customer" do
       headers = { "CONTENT_TYPE" => "application/json" }
       get "/api/v0/subscriptions/#{Customer.first.id}/subscriptions", headers: headers
 
@@ -40,6 +40,17 @@ RSpec.describe "All Customer Subscriptions API", type: :request do
       expect(all_subscriptions[:data][1][:attributes][:price]).to eq(20.00)
       expect(all_subscriptions[:data][0][:attributes][:customer_id]).to eq(@customer1.id)
       expect(all_subscriptions[:data][1][:attributes][:customer_id]).to eq(@customer1.id)
+    end
+  end
+  context "GET /subscriptions sad path" do
+    scenario "returns an error if customer does not exist" do
+      headers = { "CONTENT_TYPE" => "application/json" }
+      get "/api/v0/subscriptions/#{123456789}/subscriptions", headers: headers
+
+      error_response = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to have_http_status(:bad_request)
+      expect(response.status).to eq(400)
+      expect(error_response[:error]).to eq("Couldn't find Customer with 'id'=123456789")
     end
   end
 end
