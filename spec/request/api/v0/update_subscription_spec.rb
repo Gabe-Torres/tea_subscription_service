@@ -17,11 +17,13 @@ RSpec.describe "Update Subscription API", type: :request do
 
       patch "/api/v0/subscriptions/#{subscription.id}", headers: headers, params: updated_subscription_params.to_json
 
+      new_subscription_status = Subscription.find(subscription.id).status
       return_body = JSON.parse(response.body, symbolize_names: true)
       expect(response).to be_successful
       expect(response.content_type).to match(a_string_including("application/json"))
       expect(response).to have_http_status(:ok)
       expect(return_body[:data][:attributes][:status]).to eq(false)
+      expect(new_subscription_status).to eq(false)
     end
   end
   
