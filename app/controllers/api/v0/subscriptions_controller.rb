@@ -19,11 +19,11 @@ class Api::V0::SubscriptionsController < ApplicationController
   end
 
   def update
-    subscription = Subscription.find(params[:id])
     begin
+      subscription = Subscription.find(params[:id])
       subscription.update!(status: params[:status])
       render json: SubscriptionsSerializer.new(subscription), status: 200
-    rescue ActiveRecord::RecordInvalid => e
+    rescue ActiveRecord::RecordNotFound => e
       render json: { error: e.message }, status: 400
     end
   end
